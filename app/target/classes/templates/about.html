@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="~{fragments/header :: header-files}"></div>
+</head>
+<body class="d-flex flex-column min-vh-100 bg-light">
+    <!-- Navbar Navigation -->
+    <nav th:replace="~{fragments/navbar :: navbar}"></nav>
+    <div style="height: 72px;"></div> <!-- Spacer for fixed navbar -->
+
+    <!-- HERO PROFILE HEADER -->
+    <div class="bg-dark text-white py-5 mb-5" style="background: linear-gradient(135deg, #1b2030, #282c3f);">
+        <div class="container text-center">
+            <h1 class="font-outfit fw-bold display-5">About FoodHub</h1>
+            <p class="lead text-white-50 font-inter">An End-to-End DevOps Showcase Portal</p>
+        </div>
+    </div>
+
+    <!-- MAIN BODY -->
+    <div class="container mb-5">
+        <div class="row g-4 justify-content-center">
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm rounded-4 p-5 bg-white">
+                    <h2 class="font-outfit fw-bold mb-4">Project Overview</h2>
+                    <p class="font-inter text-muted mb-4 lead">
+                        FoodHub is a state-of-the-art food ordering simulator designed for showing modern software delivery cycles. It mimics the front-end style of popular applications like Swiggy and Zomato, backed by a Spring Boot engine.
+                    </p>
+                    
+                    <h4 class="font-outfit fw-bold mb-3 mt-4 text-primary"><i class="bi bi-gear-fill me-2"></i> Technical Architecture</h4>
+                    <p class="font-inter text-muted mb-4">
+                        The core codebase is written in Java 17 leveraging the Spring Boot 3.x framework. It utilizes Spring Web, Spring Data JPA, H2 In-Memory database, and server-side Thymeleaf rendering engines. The application layout is fully responsive, leveraging Bootstrap 5 customized with custom CSS.
+                    </p>
+
+                    <h4 class="font-outfit fw-bold mb-3 text-primary"><i class="bi bi-infinity me-2"></i> The DevOps Lifecycle</h4>
+                    <p class="font-inter text-muted mb-4">
+                        The repository is structured to run inside an automated deployment cycle:
+                    </p>
+                    
+                    <div class="row g-3 mb-4 font-inter text-muted">
+                        <div class="col-md-6">
+                            <div class="p-3 border rounded-3 bg-light h-100">
+                                <h6 class="fw-bold text-dark"><i class="bi bi-file-earmark-code me-2 text-primary"></i> Multi-Stage Dockerfile</h6>
+                                <p class="fs-sm m-0">Compiles with Maven and runs on a secure, light-weight Alpine JRE image to reduce attack vectors and minimize size.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-3 border rounded-3 bg-light h-100">
+                                <h6 class="fw-bold text-dark"><i class="bi bi-box me-2 text-primary"></i> Kubernetes Declarations</h6>
+                                <p class="fs-sm m-0">Employs LoadBalancer services and Deployment specs with memory resource limits and readiness probes to manage traffic.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-3 border rounded-3 bg-light h-100">
+                                <h6 class="fw-bold text-dark"><i class="bi bi-cloud-arrow-up me-2 text-primary"></i> Terraform Infrastructure</h6>
+                                <p class="fs-sm m-0">Spins up Virtual Networks, Resource Groups, Azure Container Registries, and Azure Kubernetes Service pools with system identities.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-3 border rounded-3 bg-light h-100">
+                                <h6 class="fw-bold text-dark"><i class="bi bi-activity me-2 text-primary"></i> Azure Pipeline</h6>
+                                <p class="fs-sm m-0">Triggers unit testing, compiles dependencies, packs the Docker container, and logs it directly into Azure Container Registry.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info rounded-4 border-0 p-4 font-inter">
+                        <h6 class="fw-bold"><i class="bi bi-info-circle-fill me-2"></i> Purpose of the Application</h6>
+                        <p class="fs-sm m-0">
+                            This application is designed specifically for sandbox/demonstration environments. It loads dummy data into H2 memory on startup and does not require complex database engines, making it portable and easy to run in container clusters.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

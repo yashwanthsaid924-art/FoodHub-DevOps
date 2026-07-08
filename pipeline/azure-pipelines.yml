@@ -1,0 +1,66 @@
+# ==========================================
+# Azure DevOps CI/CD Pipeline for FoodHub
+# ==========================================
+
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  # Connection mappings - customize these to fit your Azure DevOps service connections
+  azureSubscriptionConnection: 'AzureDevOps-ServiceConnection'
+  acrLoginServer: 'foodhubregistrydevops.azurecr.io'
+  imageRepository: 'foodhub-app'
+  dockerfilePath: 'Dockerfile'
+  mavenVersion: '1.17'
+
+stages:
+- stage: BuildAndTest
+  displayName: 'Maven Build & Unit Testing'
+  jobs:
+  - job: MavenBuild
+    displayName: 'Maven Package & Test Execution'
+    steps:
+    # Set Java SDK 17
+    - task: JavaToolInstaller@0
+      inputs:
+        versionSpec: '17'
+        jdkSourceOption: 'PreInstalled'
+        jdkArchitectureOption: 'x64'
+        cleanDestinationDirectory: true
+        
+    # Execute Maven clean package (which runs compile and unit tests)
+    - task: Maven@3
+      displayName: 'Maven Clean Package'
+      inputs:
+        mavenPomFile: 'app/pom.xml'
+        options: '-DskipTests=false'
+        publishJUnitResults: true
+        testResultsFiles: '**/surefire-reports/TEST-*.xml'
+        codeCoverageToolOption: 'None'
+        javaHomeOption: 'JDKVersion'
+        jdkVersionOption: '1.17'
+        mavenVersionOption: 'Default'
+
+- stage: BuildAndPushDocker
+  displayName: 'Docker Build & Push Stage'
+  dependsOn: BuildAndTest
+  condition: succeeded()
+  jobs:
+  - job: PushRegistry
+    displayName: 'ACR Container Publish'
+    steps:
+    # Build and Push container to ACR service endpoint
+    - task: Docker@2
+      displayName: 'Build & Push Image to Registry'
+      inputs:
+        containerRegistry: '$(azureSubscriptionConnection)'
+        repository: '$(imageRepository)'
+        command: 'buildAndPush'
+        Dockerfile: '$(dockerfilePath)'
+        buildContext: '$(Build.SourcesDirectory)'
+        tags: |
+          $(Build.BuildId)
+          latest

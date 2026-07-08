@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<nav th:fragment="navbar" class="navbar navbar-expand-lg fixed-top navbar-light bg-white border-bottom shadow-sm">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" th:href="@{/}">
+            <span class="logo-icon me-2 d-flex align-items-center justify-content-center text-white">
+                <i class="bi bi-egg-fried"></i>
+            </span>
+            <span class="brand-text font-outfit fw-bold text-dark">Food<span class="text-primary">Hub</span></span>
+        </a>
+        
+        <div class="d-flex align-items-center gap-2 order-lg-last">
+            <!-- Cart Button (Always visible on all screens) -->
+            <a th:href="@{/cart}" class="cart-btn position-relative d-flex align-items-center justify-content-center text-decoration-none me-2">
+                <i class="bi bi-bag-fill fs-5 text-dark"></i>
+                <span th:if="${cartSize > 0}" th:text="${cartSize}" class="cart-badge position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary text-white border border-white">0</span>
+            </a>
+            
+            <!-- Admin Panel Button (Desktop only) -->
+            <a th:href="@{/admin}" class="btn btn-outline-dark font-inter fw-semibold btn-sm d-none d-lg-flex align-items-center gap-1">
+                <i class="bi bi-shield-lock-fill"></i> Admin Panel
+            </a>
+            
+            <!-- Hamburger Menu Toggle (Mobile only) -->
+            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#foodhubNavbar" aria-controls="foodhubNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+        
+        <!-- Collapsible Links -->
+        <div class="collapse navbar-collapse" id="foodhubNavbar">
+            <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link font-inter fw-medium" th:href="@{/}" th:classappend="${currentURI == '/' ? 'active' : ''}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link font-inter fw-medium" th:href="@{/restaurants}" th:classappend="${currentURI == '/restaurants' ? 'active' : ''}">Restaurants</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link font-inter fw-medium" th:href="@{/menu}" th:classappend="${currentURI == '/menu' ? 'active' : ''}">Menu</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link font-inter fw-medium" th:href="@{/about}" th:classappend="${currentURI == '/about' ? 'active' : ''}">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link font-inter fw-medium" th:href="@{/contact}" th:classappend="${currentURI == '/contact' ? 'active' : ''}">Contact</a>
+                </li>
+                <!-- Admin Panel Link (Mobile only, shown at bottom of collapsible menu) -->
+                <li class="nav-item d-lg-none mt-2 border-top pt-2">
+                    <a th:href="@{/admin}" class="nav-link font-inter fw-semibold text-dark"><i class="bi bi-shield-lock-fill me-1"></i> Admin Panel</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+</html>

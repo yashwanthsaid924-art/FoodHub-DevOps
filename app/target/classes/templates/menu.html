@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="~{fragments/header :: header-files}"></div>
+</head>
+<body class="d-flex flex-column min-vh-100 bg-light">
+    <!-- Navbar Navigation -->
+    <nav th:replace="~{fragments/navbar :: navbar}"></nav>
+    <div style="height: 72px;"></div> <!-- Spacer for fixed navbar -->
+
+    <!-- RESTAURANT PROFILE HEADER -->
+    <div class="bg-dark text-white py-5 mb-5" style="background: linear-gradient(135deg, #1b2030, #282c3f); border-bottom: 4px solid var(--primary-color);">
+        <div class="container">
+            <div class="row align-items-center g-4">
+                <div class="col-md-3 text-center text-md-start">
+                    <img th:src="${restaurant.imageUrl}" class="img-fluid rounded-4 shadow-lg border border-secondary" style="max-height: 160px; width: 100%; object-fit: cover;" th:alt="${restaurant.name}">
+                </div>
+                <div class="col-md-9 text-center text-md-start">
+                    <span class="badge bg-primary font-outfit mb-2">Partner Restaurant</span>
+                    <h1 class="font-outfit fw-bold display-5 mb-2" th:text="${restaurant.name}">Restaurant Name</h1>
+                    <div class="d-flex flex-wrap justify-content-center justify-content-md-start align-items-center gap-3 font-inter text-white-50">
+                        <span><i class="bi bi-geo-alt-fill text-primary"></i> <span th:text="${restaurant.location}">Location</span></span>
+                        <span>|</span>
+                        <span><i class="bi bi-clock-fill text-primary"></i> <span th:text="${restaurant.deliveryTime} + ' mins delivery time'">30 mins</span></span>
+                        <span>|</span>
+                        <span class="rating-badge font-inter bg-success text-white">
+                            <i class="bi bi-star-fill text-white fs-xs"></i> <span th:text="${restaurant.rating}">4.5</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN MENU LISTING -->
+    <div class="container mb-5">
+        <div class="row g-4">
+            
+            <!-- Sidebar Filters -->
+            <div class="col-lg-3">
+                <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+                    <h5 class="font-outfit fw-bold mb-3">Filter Menu</h5>
+                    <form th:action="@{/restaurants/{id}(id=${restaurant.id})}" method="GET" class="mb-4">
+                        <div class="input-group">
+                            <input type="text" name="search" th:value="${searchQuery}" class="form-control font-inter border-end-0 border-secondary border-opacity-25" placeholder="Search dish..." required>
+                            <button class="btn btn-outline-secondary border-start-0 border-secondary border-opacity-25" type="submit">
+                                <i class="bi bi-search text-dark"></i>
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <div class="list-group list-group-flush font-inter">
+                        <a th:href="@{/menu(category='Pizza')}" class="list-group-item list-group-item-action border-0 px-0 d-flex justify-content-between align-items-center">
+                            <span><i class="bi bi-slice me-2 text-primary"></i> Pizzas</span>
+                            <i class="bi bi-chevron-right fs-xs text-muted"></i>
+                        </a>
+                        <a th:href="@{/menu(category='Burger')}" class="list-group-item list-group-item-action border-0 px-0 d-flex justify-content-between align-items-center">
+                            <span><i class="bi bi-columns-gap me-2 text-primary"></i> Burgers</span>
+                            <i class="bi bi-chevron-right fs-xs text-muted"></i>
+                        </a>
+                        <a th:href="@{/menu(category='Biryani')}" class="list-group-item list-group-item-action border-0 px-0 d-flex justify-content-between align-items-center">
+                            <span><i class="bi bi-egg-fried me-2 text-primary"></i> Biryani</span>
+                            <i class="bi bi-chevron-right fs-xs text-muted"></i>
+                        </a>
+                        <a th:href="@{/menu(category='Desserts')}" class="list-group-item list-group-item-action border-0 px-0 d-flex justify-content-between align-items-center">
+                            <span><i class="bi bi-cake-fill me-2 text-primary"></i> Desserts</span>
+                            <i class="bi bi-chevron-right fs-xs text-muted"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Menu Grid -->
+            <div class="col-lg-9">
+                
+                <!-- Search feedback -->
+                <div class="d-flex justify-content-between align-items-center mb-4" th:if="${searchQuery}">
+                    <h4 class="font-outfit fw-semibold m-0">
+                        Dishes matching "<span class="text-primary" th:text="${searchQuery}">dish</span>"
+                    </h4>
+                    <a th:href="@{/restaurants/{id}(id=${restaurant.id})}" class="btn btn-sm btn-outline-dark rounded-pill px-3">
+                        <i class="bi bi-x-lg"></i> Clear Filter
+                    </a>
+                </div>
+
+                <!-- Alert Message -->
+                <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show rounded-4" role="alert">
+                    <i class="bi bi-check-circle-fill me-2"></i> <span th:text="${successMessage}">Success!</span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+
+                <!-- Menu Items List -->
+                <div class="row g-4" th:if="${not #lists.isEmpty(foodItems)}">
+                    <div class="col-md-6" th:each="item : ${foodItems}">
+                        <div class="card menu-item-card h-100 p-3">
+                            <div class="d-flex gap-3 align-items-start">
+                                <div class="flex-grow-1">
+                                    <div class="mb-1">
+                                        <span th:class="${item.isVeg} ? 'veg-badge' : 'nonveg-badge'" class="me-1"></span>
+                                        <span class="badge bg-light text-dark font-inter fs-xs" th:text="${item.category}">Category</span>
+                                    </div>
+                                    <h5 class="font-outfit fw-bold text-dark mb-1" th:text="${item.name}">Dish Name</h5>
+                                    <h6 class="font-outfit text-primary fw-bold mb-2">₹<span th:text="${#numbers.formatDecimal(item.price, 1, 2)}">129.00</span></h6>
+                                    <p class="text-muted fs-xs m-0 text-truncate-3" th:text="${item.description}">Dish Description goes here.</p>
+                                </div>
+                                <div class="text-center position-relative">
+                                    <img th:src="${item.imageUrl}" class="menu-item-img border border-secondary border-opacity-10" th:alt="${item.name}">
+                                    <form th:action="@{/cart/add}" method="POST" class="mt-2">
+                                        <input type="hidden" name="foodItemId" th:value="${item.id}">
+                                        <button type="submit" class="btn btn-primary btn-sm rounded-pill px-3 font-outfit shadow-sm">
+                                            <i class="bi bi-plus-lg me-1"></i> Add to Cart
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Empty State -->
+                <div class="text-center py-5" th:if="${#lists.isEmpty(foodItems)}">
+                    <div class="text-muted mb-4">
+                        <i class="bi bi-inbox fs-1 text-primary"></i>
+                    </div>
+                    <h4 class="font-outfit fw-bold">No Menu Items Found</h4>
+                    <p class="text-muted font-inter">No food items were found matching your criteria in this restaurant.</p>
+                    <a th:href="@{/restaurants/{id}(id=${restaurant.id})}" class="btn btn-primary rounded-pill px-4 mt-2 font-outfit">Show Full Menu</a>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

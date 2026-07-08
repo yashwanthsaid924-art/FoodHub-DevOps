@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="~{fragments/header :: header-files}"></div>
+</head>
+<body class="d-flex flex-column min-vh-100 bg-light">
+    <!-- Navbar Navigation -->
+    <nav th:replace="~{fragments/navbar :: navbar}"></nav>
+    <div style="height: 72px;"></div> <!-- Spacer for fixed navbar -->
+
+    <!-- PAGE HEADER -->
+    <div class="bg-dark text-white py-4 mb-5" style="background: linear-gradient(135deg, #1b2030, #282c3f);">
+        <div class="container text-center text-md-start">
+            <h1 class="font-outfit fw-bold m-0" th:text="${restaurantDTO.id != null} ? 'Edit Restaurant' : 'Add New Restaurant'">Add Restaurant</h1>
+            <p class="text-white-50 font-inter m-0">Provide details for the partner restaurant below</p>
+        </div>
+    </div>
+
+    <!-- FORM BODY -->
+    <div class="container mb-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white font-inter">
+                    
+                    <form th:action="@{/admin/restaurant/save}" th:object="${restaurantDTO}" method="POST">
+                        <!-- Hidden ID field -->
+                        <input type="hidden" th:field="*{id}">
+
+                        <!-- Restaurant Name -->
+                        <div class="mb-4">
+                            <label for="name" class="form-label fw-bold">Restaurant Name</label>
+                            <input type="text" class="form-control rounded-3" id="name" th:field="*{name}" placeholder="e.g. Burger King" th:classappend="${#fields.hasErrors('name')} ? 'is-invalid' : ''">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name is required</div>
+                        </div>
+
+                        <!-- Rating & Delivery Time (Inline) -->
+                        <div class="row g-4 mb-4">
+                            <div class="col-md-6">
+                                <label for="rating" class="form-label fw-bold">Rating (1.0 to 5.0)</label>
+                                <input type="number" step="0.1" class="form-control rounded-3" id="rating" th:field="*{rating}" placeholder="4.5" th:classappend="${#fields.hasErrors('rating')} ? 'is-invalid' : ''">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('rating')}" th:errors="*{rating}">Rating is required</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="deliveryTime" class="form-label fw-bold">Delivery Time (in minutes)</label>
+                                <input type="number" class="form-control rounded-3" id="deliveryTime" th:field="*{deliveryTime}" placeholder="25" th:classappend="${#fields.hasErrors('deliveryTime')} ? 'is-invalid' : ''">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('deliveryTime')}" th:errors="*{deliveryTime}">Delivery time is required</div>
+                            </div>
+                        </div>
+
+                        <!-- Location -->
+                        <div class="mb-4">
+                            <label for="location" class="form-label fw-bold">Location Address</label>
+                            <input type="text" class="form-control rounded-3" id="location" th:field="*{location}" placeholder="e.g. Koramangala, Bangalore" th:classappend="${#fields.hasErrors('location')} ? 'is-invalid' : ''">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('location')}" th:errors="*{location}">Location is required</div>
+                        </div>
+
+                        <!-- Image URL -->
+                        <div class="mb-4">
+                            <label for="imageUrl" class="form-label fw-bold">Restaurant Banner Image URL</label>
+                            <input type="text" class="form-control rounded-3" id="imageUrl" th:field="*{imageUrl}" placeholder="https://images.unsplash.com/photo-..." th:classappend="${#fields.hasErrors('imageUrl')} ? 'is-invalid' : ''">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('imageUrl')}" th:errors="*{imageUrl}">Image URL is required</div>
+                            <div class="form-text text-muted fs-xs">Use a standard high quality image link from free sources like Unsplash.</div>
+                        </div>
+
+                        <!-- Submit Buttons -->
+                        <div class="d-flex justify-content-end gap-3 mt-5">
+                            <a th:href="@{/admin}" class="btn btn-outline-dark rounded-pill px-4">Cancel</a>
+                            <button type="submit" class="btn btn-primary rounded-pill px-4">
+                                <i class="bi bi-save me-1"></i> Save Restaurant
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="~{fragments/header :: header-files}"></div>
+</head>
+<body class="d-flex flex-column min-vh-100 bg-light">
+    <!-- Navbar Navigation -->
+    <nav th:replace="~{fragments/navbar :: navbar}"></nav>
+    <div style="height: 72px;"></div> <!-- Spacer for fixed navbar -->
+
+    <!-- HERO BANNER -->
+    <section class="hero-banner d-flex align-items-center text-white">
+        <div class="container py-5 text-center text-md-start">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h1 class="font-outfit fw-extrabold display-4 mb-3">
+                        Craving delicious food? <br>
+                        <span class="text-primary">We deliver it fast.</span>
+                    </h1>
+                    <p class="lead text-white-50 mb-4 font-inter">
+                        Discover top-rated restaurants, local street favorites, and gourmet cafes, delivered directly to your door in minutes.
+                    </p>
+                    
+                    <!-- Search Form -->
+                    <form th:action="@{/restaurants}" method="GET" class="search-box-container mb-4">
+                        <input type="text" name="search" placeholder="Search for restaurants, cuisines, or locations..." required>
+                        <button type="submit" class="btn btn-primary font-outfit">
+                            <i class="bi bi-search me-1"></i> Search
+                        </button>
+                    </form>
+                    
+                    <div class="d-flex flex-wrap gap-2 align-items-center">
+                        <span class="text-white-50 fs-sm font-inter">Popular Searches:</span>
+                        <a th:href="@{/restaurants?search=Burger}" class="btn btn-sm btn-outline-light rounded-pill border-opacity-25 fs-xs">Burger</a>
+                        <a th:href="@{/restaurants?search=Pizza}" class="btn btn-sm btn-outline-light rounded-pill border-opacity-25 fs-xs">Pizza</a>
+                        <a th:href="@{/restaurants?search=Biryani}" class="btn btn-sm btn-outline-light rounded-pill border-opacity-25 fs-xs">Biryani</a>
+                    </div>
+                </div>
+                <div class="col-lg-6 d-none d-lg-block text-center position-relative">
+                    <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80" class="img-fluid rounded-4 shadow-lg border border-secondary border-opacity-25" style="max-height: 400px; object-fit: cover;" alt="Gourmet food banner">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOD CATEGORIES -->
+    <section class="container py-5">
+        <div class="text-center mb-5">
+            <h2 class="font-outfit fw-bold">Browse by Category</h2>
+            <p class="text-muted font-inter">What are you in the mood for today?</p>
+        </div>
+        <div class="d-flex flex-wrap justify-content-center gap-4">
+            <a th:href="@{/menu?category=Veg}" class="category-chip">
+                <i class="bi bi-tree-fill category-icon text-success"></i>
+                <span class="font-outfit fw-semibold fs-sm">Veg Only</span>
+            </a>
+            <a th:href="@{/menu?category=Non Veg}" class="category-chip">
+                <i class="bi bi-fire category-icon text-danger"></i>
+                <span class="font-outfit fw-semibold fs-sm">Non Veg</span>
+            </a>
+            <a th:href="@{/menu?category=Pizza}" class="category-chip">
+                <i class="bi bi-slice category-icon"></i>
+                <span class="font-outfit fw-semibold fs-sm">Pizza</span>
+            </a>
+            <a th:href="@{/menu?category=Burger}" class="category-chip">
+                <i class="bi bi-columns-gap category-icon"></i>
+                <span class="font-outfit fw-semibold fs-sm">Burgers</span>
+            </a>
+            <a th:href="@{/menu?category=Biryani}" class="category-chip">
+                <i class="bi bi-egg-fried category-icon"></i>
+                <span class="font-outfit fw-semibold fs-sm">Biryani</span>
+            </a>
+            <a th:href="@{/menu?category=Desserts}" class="category-chip">
+                <i class="bi bi-cake-fill category-icon"></i>
+                <span class="font-outfit fw-semibold fs-sm">Desserts</span>
+            </a>
+            <a th:href="@{/menu?category=Drinks}" class="category-chip">
+                <i class="bi bi-cup-straw category-icon"></i>
+                <span class="font-outfit fw-semibold fs-sm">Drinks</span>
+            </a>
+        </div>
+    </section>
+
+    <!-- FLASH MESSAGES -->
+    <div class="container" th:if="${successMessage}">
+        <div class="alert alert-success alert-dismissible fade show rounded-4" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i> <span th:text="${successMessage}">Success message</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+
+    <!-- FEATURED RESTAURANTS -->
+    <section class="container py-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h3 class="font-outfit fw-bold mb-1">Featured Restaurants</h3>
+                <p class="text-muted font-inter m-0">The highest rated partners in your city</p>
+            </div>
+            <a th:href="@{/restaurants}" class="btn btn-outline-primary rounded-pill font-outfit btn-sm px-3">View All Restaurants</a>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4" th:each="restaurant : ${featuredRestaurants}">
+                <div class="card restaurant-card h-100">
+                    <div class="card-img-wrapper">
+                        <img th:src="${restaurant.imageUrl}" class="card-img-top" th:alt="${restaurant.name}">
+                        <div class="delivery-badge font-inter">
+                            <i class="bi bi-clock-fill text-primary"></i> <span th:text="${restaurant.deliveryTime} + ' mins'">25 mins</span>
+                        </div>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h5 class="card-title font-outfit fw-bold m-0" th:text="${restaurant.name}">Restaurant Name</h5>
+                            <span class="rating-badge font-inter">
+                                <i class="bi bi-star-fill text-white fs-xs"></i> <span th:text="${restaurant.rating}">4.5</span>
+                            </span>
+                        </div>
+                        <p class="text-muted fs-sm mb-1"><i class="bi bi-geo-alt-fill me-1"></i> <span th:text="${restaurant.location}">Location</span></p>
+                        <hr class="my-3 opacity-25">
+                        <div class="d-grid">
+                            <a th:href="@{/restaurants/{id}(id=${restaurant.id})}" class="btn btn-outline-dark font-outfit rounded-pill btn-sm py-2">
+                                View Menu <i class="bi bi-arrow-right-short ms-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- POPULAR DISHES -->
+    <section class="container py-5 mb-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h3 class="font-outfit fw-bold mb-1">Popular Dishes</h3>
+                <p class="text-muted font-inter m-0">What everyone is ordering right now</p>
+            </div>
+            <a th:href="@{/menu}" class="btn btn-outline-primary rounded-pill font-outfit btn-sm px-3">View Full Menu</a>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-4" th:each="foodItem : ${popularDishes}">
+                <div class="card menu-item-card h-100 p-3">
+                    <div class="d-flex gap-3 align-items-center">
+                        <img th:src="${foodItem.imageUrl}" class="menu-item-img" th:alt="${foodItem.name}">
+                        <div class="flex-grow-1">
+                            <div class="mb-1">
+                                <span th:class="${foodItem.isVeg} ? 'veg-badge' : 'nonveg-badge'" class="me-1"></span>
+                                <span class="badge bg-light text-dark font-inter fs-xs" th:text="${foodItem.category}">Category</span>
+                            </div>
+                            <h6 class="font-outfit fw-bold mb-1" th:text="${foodItem.name}">Food Item Name</h6>
+                            <p class="text-muted fs-xs mb-2 text-truncate-2" th:text="${foodItem.description}">Description</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="font-outfit fw-bold text-dark fs-sm">₹<span th:text="${#numbers.formatDecimal(foodItem.price, 1, 2)}">199.00</span></span>
+                                <form th:action="@{/cart/add}" method="POST" class="m-0">
+                                    <input type="hidden" name="foodItemId" th:value="${foodItem.id}">
+                                    <button type="submit" class="btn btn-primary btn-sm rounded-pill px-3 font-outfit">
+                                        <i class="bi bi-plus-lg me-1"></i> Add
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

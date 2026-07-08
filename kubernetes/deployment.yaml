@@ -1,0 +1,50 @@
+apiVersion:apps/v1
+kind: Deployment
+metadata:
+  name: foodhub-deployment
+  labels:
+    app: foodhub-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: foodhub-app
+  template:
+    metadata:
+      labels:
+        app: foodhub-app
+    spec:
+      containers:
+      - name: foodhub-container
+        # Placeholder registry image - will be substituted during release/pipeline stage
+        image: foodhubregistry.azurecr.io/foodhub-app:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+        
+        # Configure resource quotas for the sandbox environment
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+            
+        # Liveness & Readiness checks targeting standard index path
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 15
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 20
+          periodSeconds: 10
+          
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: "prod"

@@ -1,0 +1,345 @@
+/* CSS VARIABLES FOR MODERN DESIGN SYSTEM */
+:root {
+    --primary-color: #fc8019; /* Swiggy Orange */
+    --primary-hover: #e16b0b;
+    --dark-color: #282c3f;
+    --light-bg: #f8f9fa;
+    --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    --hover-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    --transition-speed: 0.3s;
+    --font-outfit: 'Outfit', sans-serif;
+    --font-inter: 'Inter', sans-serif;
+}
+
+/* GENERAL STYLES */
+body {
+    font-family: var(--font-inter);
+    color: var(--dark-color);
+    background-color: var(--light-bg);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* TYPOGRAPHY */
+.font-outfit {
+    font-family: var(--font-outfit);
+}
+.font-inter {
+    font-family: var(--font-inter);
+}
+
+/* CUSTOM BUTTONS & ACCENTS */
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: #fff;
+    font-family: var(--font-outfit);
+    font-weight: 600;
+    transition: all var(--transition-speed) ease;
+}
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active {
+    background-color: var(--primary-hover) !important;
+    border-color: var(--primary-hover) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(252, 128, 25, 0.3);
+}
+.text-primary {
+    color: var(--primary-color) !important;
+}
+.bg-primary {
+    background-color: var(--primary-color) !important;
+}
+
+/* LOGO ICON & NAVBAR */
+.logo-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--primary-color), #ff9f43);
+    box-shadow: 0 4px 10px rgba(252, 128, 25, 0.3);
+}
+.navbar {
+    transition: all 0.3s ease;
+}
+.navbar .nav-link {
+    color: #686b78;
+    padding: 0.5rem 1rem;
+    transition: color 0.2s ease;
+}
+.navbar .nav-link:hover, .navbar .nav-link.active {
+    color: var(--primary-color);
+}
+.cart-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background-color: #f0f0f5;
+    transition: all 0.2s ease;
+}
+.cart-btn:hover {
+    background-color: #e5e5ed;
+    transform: scale(1.05);
+}
+.cart-badge {
+    font-size: 0.7rem;
+    padding: 0.3em 0.5em;
+    min-width: 18px;
+}
+
+/* HERO BANNER */
+.hero-banner {
+    position: relative;
+    background: linear-gradient(120deg, #1b2030, #282c3f);
+    padding: 80px 0;
+    overflow: hidden;
+    border-bottom-left-radius: 40px;
+    border-bottom-right-radius: 40px;
+}
+.hero-banner::before {
+    content: '';
+    position: absolute;
+    top: -20%;
+    right: -10%;
+    width: 450px;
+    height: 450px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(252, 128, 25, 0.15) 0%, rgba(252, 128, 25, 0) 70%);
+}
+.search-box-container {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 8px;
+    border-radius: 30px;
+    display: flex;
+    max-width: 600px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+.search-box-container input {
+    background: transparent;
+    border: none;
+    color: #fff;
+    padding: 10px 20px;
+    width: 100%;
+}
+.search-box-container input::placeholder {
+    color: #a0a5b8;
+}
+.search-box-container input:focus {
+    outline: none;
+}
+.search-box-container .btn {
+    border-radius: 25px;
+    padding: 10px 25px;
+}
+
+/* FOOD CATEGORIES */
+.category-chip {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+    border: 1px solid #e9eaee;
+    padding: 15px;
+    border-radius: 20px;
+    text-decoration: none;
+    color: var(--dark-color);
+    width: 110px;
+    transition: all var(--transition-speed) ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+}
+.category-chip:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(252, 128, 25, 0.15);
+    color: var(--primary-color);
+}
+.category-chip .category-icon {
+    font-size: 1.8rem;
+    margin-bottom: 8px;
+    color: var(--primary-color);
+    transition: transform 0.3s ease;
+}
+.category-chip:hover .category-icon {
+    transform: scale(1.2) rotate(5deg);
+}
+
+/* RESTAURANT & MENU CARDS */
+.restaurant-card {
+    background-color: #fff;
+    border-radius: 20px;
+    border: none;
+    overflow: hidden;
+    transition: all var(--transition-speed) ease;
+    box-shadow: var(--card-shadow);
+}
+.restaurant-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--hover-shadow);
+}
+.card-img-wrapper {
+    position: relative;
+    overflow: hidden;
+    height: 200px;
+}
+.card-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+.restaurant-card:hover .card-img-wrapper img {
+    transform: scale(1.1);
+}
+.delivery-badge {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    background-color: rgba(255,255,255,0.9);
+    color: var(--dark-color);
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: 12px;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.rating-badge {
+    background-color: #48c479;
+    color: #fff;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.8rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* VEG / NON-VEG INDICATOR BADGES */
+.veg-badge, .nonveg-badge {
+    width: 16px;
+    height: 16px;
+    border: 2px solid #48c479;
+    padding: 2px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 3px;
+    vertical-align: middle;
+}
+.nonveg-badge {
+    border-color: #bd3c3c;
+}
+.veg-badge::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background-color: #48c479;
+    border-radius: 50%;
+    display: block;
+}
+.nonveg-badge::before {
+    content: '';
+    width: 0;
+    height: 0;
+    border-left: 3.5px solid transparent;
+    border-right: 3.5px solid transparent;
+    border-bottom: 6px solid #bd3c3c;
+    display: block;
+}
+
+/* MENU DETAILS CARD */
+.menu-item-card {
+    background-color: #fff;
+    border-radius: 20px;
+    border: none;
+    box-shadow: var(--card-shadow);
+    overflow: hidden;
+    transition: all 0.25s ease;
+}
+.menu-item-card:hover {
+    box-shadow: var(--hover-shadow);
+    transform: translateY(-2px);
+}
+.menu-item-img {
+    height: 120px;
+    width: 120px;
+    object-fit: cover;
+    border-radius: 15px;
+}
+
+/* CART STYLES */
+.cart-card {
+    border-radius: 20px;
+    box-shadow: var(--card-shadow);
+    border: none;
+}
+.qty-control {
+    display: inline-flex;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    overflow: hidden;
+    background: #fff;
+}
+.qty-control button {
+    background: transparent;
+    border: none;
+    padding: 5px 12px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.qty-control button:hover {
+    background-color: #f1f1f1;
+}
+.qty-control span {
+    padding: 5px 10px;
+    min-width: 25px;
+    text-align: center;
+    font-weight: 600;
+}
+
+/* ADMIN PANEL CUSTOM STYLES */
+.admin-table {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+}
+.admin-table th {
+    background-color: #f1f2f6;
+    color: var(--dark-color);
+    font-family: var(--font-outfit);
+    font-weight: 600;
+}
+
+/* HOVER EFFECTS & ANIMATIONS */
+.hover-primary:hover {
+    color: var(--primary-color) !important;
+}
+.social-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: rgba(255,255,255,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+.social-icon:hover {
+    background-color: var(--primary-color);
+    transform: translateY(-3px);
+}
+
+/* MICRO-ANIMATIONS */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+.pulse-animation {
+    animation: pulse 2s infinite ease-in-out;
+}

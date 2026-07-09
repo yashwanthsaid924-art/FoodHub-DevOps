@@ -64,7 +64,7 @@ stages:
   - deployment: DeployToAKS
     displayName: Deploy Application
 
-    environment: default
+    environment: yashwanthsaid924artFoodHubDevOps
 
     strategy:
       runOnce:

@@ -7,7 +7,7 @@ pool:
 variables:
   azureSubscriptionConnection: 'foodhubacr12345'
   acrLoginServer: 'foodhubacr12345.azurecr.io'
-  imageRepository: 'foodhub-app'
+  imageRepository: 'foodhub'
   dockerfilePath: 'Dockerfile'
 
 stages:
@@ -45,11 +45,11 @@ stages:
       inputs:
         command: buildAndPush
         containerRegistry: 'foodhubacr12345'
-        repository: 'foodhub-app'
+        repository: 'foodhub'
         Dockerfile: 'Dockerfile'
         buildContext: '$(Build.SourcesDirectory)'
         tags: |
-          latest
+          v1
           $(Build.BuildId)
 
 # ==========================
@@ -83,4 +83,4 @@ stages:
                 kubernetes/deployment.yaml
                 kubernetes/service.yaml
               containers: |
-                foodhubacr12345.azurecr.io/foodhub-app:$(Build.BuildId)
+                foodhubacr12345.azurecr.io/foodhub:$(Build.BuildId)

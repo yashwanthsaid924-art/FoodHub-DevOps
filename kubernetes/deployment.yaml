@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: foodhub-container
-        image: foodhubacr12345.azurecr.io/foodhub-app:latest
+        image: foodhubacr12345.azurecr.io/foodhub:v1
         imagePullPolicy: Always
         ports:
         - containerPort: 8080

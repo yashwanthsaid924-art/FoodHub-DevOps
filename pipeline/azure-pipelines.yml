@@ -1,86 +1,130 @@
 trigger:
 - main
 
-pool:
-  vmImage: 'ubuntu-latest'
+resources:
+- repo: self
 
 variables:
-  azureSubscriptionConnection: 'foodhubacr12345'
-  acrLoginServer: 'foodhubacr12345.azurecr.io'
+
+  dockerRegistryServiceConnection: '1e89d218-6ad9-4b17-a8c2-f16d71de181a'
   imageRepository: 'foodhub'
-  dockerfilePath: 'Dockerfile'
+  containerRegistry: 'foodhubacr12345.azurecr.io'
+  dockerfilePath: '**/Dockerfile'
+  tag: '$(Build.BuildId)'
+  imagePullSecret: 'foodhubacr123452969-auth'
+
+  vmImageName: 'ubuntu-latest'
+
+  k8sNamespaceForPR: 'review-app-$(System.PullRequest.PullRequestId)'
 
 stages:
-
-# ==========================
-# Build Stage
-# ==========================
 - stage: Build
-  displayName: Build Stage
-
+  displayName: Build stage
   jobs:
-  - job: MavenBuild
-    displayName: Maven Build
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: $(vmImageName)
 
     steps:
-
-    - task: JavaToolInstaller@0
-      inputs:
-        versionSpec: '17'
-        jdkSourceOption: 'PreInstalled'
-        jdkArchitectureOption: 'x64'
-
-    - task: Maven@3
-      displayName: Maven Package
-      inputs:
-        mavenPomFile: 'app/pom.xml'
-        goals: 'clean package'
-        publishJUnitResults: true
-        testResultsFiles: '**/surefire-reports/TEST-*.xml'
-        javaHomeOption: 'JDKVersion'
-        jdkVersionOption: '1.17'
-
     - task: Docker@2
-      displayName: Build and Push Docker Image
+      displayName: Build and push an image to container registry
       inputs:
         command: buildAndPush
-        containerRegistry: 'foodhubacr12345'
-        repository: 'foodhub'
-        Dockerfile: 'Dockerfile'
-        buildContext: '$(Build.SourcesDirectory)'
+        repository: $(imageRepository)
+        dockerfile: $(dockerfilePath)
+        containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
-          v1
-          $(Build.BuildId)
+          $(tag)
 
-# ==========================
-# Deploy Stage
-# ==========================
+    - upload: manifests
+      artifact: manifests
+
 - stage: Deploy
-  displayName: Deploy to AKS
+  displayName: Deploy stage
   dependsOn: Build
-  condition: succeeded()
 
   jobs:
-  - deployment: DeployToAKS
-    displayName: Deploy Application
+  - deployment: Deploy
+    displayName: Deploy
+    condition: and(succeeded(), not(startsWith(variables['Build.SourceBranch'], 'refs/pull/')))
 
-    environment: yashwanthsaid924artFoodHubDevOps
+    pool:
+      vmImage: $(vmImageName)
+
+    environment: 'yashwanthsaid924artFoodHubDevOps.default'
 
     strategy:
       runOnce:
         deploy:
           steps:
 
-          - checkout: self
+          - task: KubernetesManifest@0
+            displayName: Create imagePullSecret
+            inputs:
+              action: createSecret
+              secretName: $(imagePullSecret)
+              dockerRegistryEndpoint: $(dockerRegistryServiceConnection)
 
-          - task: KubernetesManifest@1
-            displayName: Deploy to AKS
+          - task: KubernetesManifest@0
+            displayName: Deploy to Kubernetes cluster
             inputs:
               action: deploy
-              kubernetesServiceConnection: 'foodhub-aks-default'
-              namespace: default
               manifests: |
-                kubernetes/deployment.yaml
-                kubernetes/service.yaml
+                $(Pipeline.Workspace)/manifests/deployment.yml
+                $(Pipeline.Workspace)/manifests/service.yml
+              imagePullSecrets: |
+                $(imagePullSecret)
               containers: |
-                foodhubacr12345.azurecr.io/foodhub:$(Build.BuildId)
+                $(containerRegistry)/$(imageRepository):$(tag)
+
+  - deployment: DeployPullRequest
+    displayName: Deploy Pull Request
+    condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/pull/'))
+
+    pool:
+      vmImage: $(vmImageName)
+
+    environment: 'yashwanthsaid924artFoodHubDevOps.$(k8sNamespaceForPR)'
+
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+
+          - reviewApp: default
+
+          - task: Kubernetes@1
+            displayName: Create PR Namespace
+            inputs:
+              command: apply
+              useConfigurationFile: true
+              inline: |
+                {
+                  "kind":"Namespace",
+                  "apiVersion":"v1",
+                  "metadata":{
+                    "name":"$(k8sNamespaceForPR)"
+                  }
+                }
+
+          - task: KubernetesManifest@0
+            displayName: Create imagePullSecret
+            inputs:
+              action: createSecret
+              namespace: $(k8sNamespaceForPR)
+              secretName: $(imagePullSecret)
+              dockerRegistryEndpoint: $(dockerRegistryServiceConnection)
+
+          - task: KubernetesManifest@0
+            displayName: Deploy Review App
+            inputs:
+              action: deploy
+              namespace: $(k8sNamespaceForPR)
+              manifests: |
+                $(Pipeline.Workspace)/manifests/deployment.yml
+                $(Pipeline.Workspace)/manifests/service.yml
+              imagePullSecrets: |
+                $(imagePullSecret)
+              containers: |
+                $(containerRegistry)/$(imageRepository):$(tag)

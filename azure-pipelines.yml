@@ -12,7 +12,7 @@ variables:
 
   # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: '1e89d218-6ad9-4b17-a8c2-f16d71de181a'
-  imageRepository: 'yashwanthsaidartfoodhubdevops'
+  imageRepository: 'foodhub'
   containerRegistry: 'foodhubacr12345.azurecr.io'
   dockerfilePath: '**/Dockerfile'
   tag: '$(Build.BuildId)'

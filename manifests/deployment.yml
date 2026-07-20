@@ -1,19 +1,19 @@
-apiVersion : apps/v1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: yashwanthsaidartfoodhubdevops 
+  name: foodhub-deployment
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
-      app: yashwanthsaidartfoodhubdevops
+      app: foodhub
   template:
     metadata:
       labels:
-        app: yashwanthsaidartfoodhubdevops 
+        app: foodhub
     spec:
       containers:
-        - name: yashwanthsaidartfoodhubdevops 
-          image: foodhubacr12345.azurecr.io/yashwanthsaidartfoodhubdevops
-          ports:
-          - containerPort: 8080
+      - name: foodhub-container
+        image: foodhubacr12345.azurecr.io/foodhub:20
+        ports:
+        - containerPort: 8080

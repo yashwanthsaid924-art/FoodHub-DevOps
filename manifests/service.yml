@@ -1,10 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-    name: yashwanthsaidartfoodhubdevops
+  name: foodhub-service
 spec:
-    type: LoadBalancer
-    ports:
-    - port: 8080 
-    selector:
-        app: yashwanthsaidartfoodhubdevops
+  type: LoadBalancer
+  selector:
+    app: foodhub
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
